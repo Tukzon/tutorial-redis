@@ -1,0 +1,30 @@
+version: '3'
+services:
+  api:
+    container_name: flask-tutorial
+    build: .
+    entrypoint: python app.py
+    env_file:
+      - .env
+    ports:
+      - '5000:5000'
+
+  redis:
+    image: redis:latest
+    container_name: redis-tutorial
+    restart: always
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-tutorial
+    restart: always
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: tutorial
