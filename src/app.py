@@ -26,13 +26,13 @@ redis.config_set('maxmemory', '2mb')
 @app.route("/tutorial", methods=['GET'])
 def get_data():
     search = request.args.get('search')
-    cache = redis.get(upper(search))
+    cache = redis.get(search.upper())
     app.logger.info(f"Cache: {cache}")
     if cache == None:
-        cursor.execute(f"SELECT * FROM country WHERE name LIKE '%{upper(search)}%'")
+        cursor.execute(f"SELECT * FROM country WHERE name LIKE '%{search.upper()}%'")
         #redis.flushall()
         data = cursor.fetchall()
-        redis.set(upper(search), str(data))
+        redis.set(search.upper(), str(data))
         return jsonify(data), "DB"
     else:
         return cache, "REDIS"
